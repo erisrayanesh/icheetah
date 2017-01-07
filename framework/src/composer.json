@@ -1,0 +1,8 @@
+{
+    "name": "erisrayanesh/icheetah",
+    "description": "The ICheetah framework",
+    "type": "library",
+    "license": "GPL",
+    "minimum-stability": "dev",
+    "require": {}
+}
