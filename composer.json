@@ -4,5 +4,15 @@
     "type": "library",
     "license": "GPL",
     "minimum-stability": "dev",
-    "require": {}
+    "autoload": {
+        "files": [
+            "src/ICheetah/Tools/Helpers.php"
+        ],
+        "psr-4": {
+            "ICheetah\\": "src/ICheetah/"
+        }
+    },
+    "require": {
+        "php": ">=5.5.9"
+    }
 }
