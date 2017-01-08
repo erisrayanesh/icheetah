@@ -16,24 +16,6 @@ class Collection implements \ArrayAccess, \Iterator
         return new static($items);
     }
     
-    public static function has($array, $value, $strict = false)
-    {
-        $retVal = false;
-        if (is_array($array) && array_search($value, $array, $strict) !== false){
-            return true;
-        }
-        return $retVal;
-    }
-    
-    public static function hasKey($array, $key)
-    {
-        $retVal = false;
-        if (is_array($array) && array_key_exists($key, $array) !== false){
-            return true;
-        }
-        return $retVal;
-    }
-
     //ArrayAccess
     
     public function offsetSet($offset, $value) {

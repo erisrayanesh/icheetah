@@ -85,7 +85,7 @@ trait StdArrayAccess
         return \ICheetah\Convert::toFloat($this->get($key, $default));
     }
     
-    public function exist($value, $strict = false)
+    public function has($value, $strict = false)
     {
         return in_array($value, $this->items, $strict);
     }
@@ -95,7 +95,7 @@ trait StdArrayAccess
         return array_search($value, $this->items, $strict);
     }
     
-    public function keyExist($key)
+    public function hasKey($key)
     {
         return array_key_exists($key, $this->items);
     }
@@ -123,7 +123,7 @@ trait StdArrayAccess
                 $this->removeAt($k);
             }
         } else {
-            if ($this->keyExist($key)){
+            if ($this->hasKey($key)){
                 unset($this->items[$key]);
             }
         }        
@@ -235,5 +235,3 @@ trait StdArrayAccess
     }
     
 }
-
-?>
