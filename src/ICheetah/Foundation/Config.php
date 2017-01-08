@@ -18,7 +18,6 @@ class Config
 
     protected function __construct()
     {
-        parent::__construct();
         $this->cache = new \ICheetah\Tools\Collection();
     }
         
