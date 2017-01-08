@@ -10,7 +10,7 @@ class Config
      *
      * @var \ICheetah\Tools\Collection
      */
-    protected $cache;
+    public $cache;
     
     
     protected $repository;

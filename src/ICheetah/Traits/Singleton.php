@@ -4,7 +4,7 @@ namespace ICheetah\Traits;
 
 trait Singleton {
     
-    protected $instance = null;
+    protected static $instance = null;
             
     /**
      * Returns the *Singleton* instance of this class.
