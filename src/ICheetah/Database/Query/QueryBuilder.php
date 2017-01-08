@@ -356,7 +356,7 @@ class QueryBuilder
 
     public function setBinding(array $binding, $part = "where")
     {
-        if (Arr::keyExist($this->bindings, $part)){
+        if (Arr::hasKey($this->bindings, $part)){
             Arr::set($this->bindings, $part, $binding);
         }
         return $this;
@@ -364,7 +364,7 @@ class QueryBuilder
     
     public function addBinding($value, $part = "where")
     {
-        if (!Arr::keyExist($this->bindings, $part)){
+        if (!Arr::hasKey($this->bindings, $part)){
             throw new InvalidArgumentException("Invalid binding part: {$part}.");
         }
         
@@ -423,7 +423,7 @@ class QueryBuilder
     
     protected function addToPart($name, $value)
     {
-        if (Arr::keyExist($this->parts, $name)){
+        if (Arr::hasKey($this->parts, $name)){
             return Arr::add($this->parts[$name], $value);
         }
     }

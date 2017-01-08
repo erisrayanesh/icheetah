@@ -71,7 +71,7 @@ class Request
         
     public static function exist($name)
     {
-        return Arr::keyExist($_REQUEST, $name);
+        return Arr::hasKey($_REQUEST, $name);
     }
 
     public static function allInputs()

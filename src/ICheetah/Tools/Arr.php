@@ -58,12 +58,12 @@ class Arr
         }
     }
         
-    public static function exist(array $array, $value)
+    public static function has(array $array, $value)
     {
         return array_search($value, $array) !== false;
     }
     
-    public static function keyExist(array $array, $key)
+    public static function hasKey(array $array, $key)
     {
         return array_key_exists($key, $array);
     }

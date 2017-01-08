@@ -48,7 +48,7 @@ class Route
     public function matches(ManualRouter $router, $uri)
     {
         
-        if (!Arr::exist($this->getMethod(), Request::method())){
+        if (!Arr::has($this->getMethod(), Request::method())){
             return false;
         }
         
