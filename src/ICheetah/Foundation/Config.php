@@ -4,7 +4,7 @@ namespace ICheetah\Foundation;
 
 class Config
 {
-    use \ICheetah\Foundation\Singleton;
+    use \ICheetah\Traits\Singleton;
     
     /**
      *
@@ -28,7 +28,7 @@ class Config
             $delimiter = ".";
         }
         
-        
+        $this->load($key);
         
         //split and reverse the keys order
         //example: "application.root" => ["root", "application"]
