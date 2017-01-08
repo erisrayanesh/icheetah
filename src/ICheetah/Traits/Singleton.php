@@ -1,10 +1,11 @@
 <?php
 
-namespace ICheetah\Foundation;
+namespace ICheetah\Traits;
 
-abstract class Singleton {
+trait Singleton {
     
-    
+    protected $instance = null;
+            
     /**
      * Returns the *Singleton* instance of this class.
      *
