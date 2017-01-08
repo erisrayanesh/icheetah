@@ -4,6 +4,10 @@
     "type": "library",
     "license": "GPL",
     "minimum-stability": "dev",
+    "require": {
+        "php": ">=5.5.9",
+        "monolog/monolog": "~1.11"
+    },
     "autoload": {
         "files": [
             "src/ICheetah/Tools/Helpers.php"
@@ -11,8 +15,5 @@
         "psr-4": {
             "ICheetah\\": "src/ICheetah/"
         }
-    },
-    "require": {
-        "php": ">=5.5.9"
     }
 }
