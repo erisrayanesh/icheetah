@@ -68,8 +68,6 @@ class Arr
         return array_key_exists($key, $array);
     }
     
-    
-
     public static function isAssociative(array $arr)
     {
         if (array() === $arr) return false;
@@ -80,8 +78,7 @@ class Arr
     {
         return $this->isAssociative($arr);
     }
-    
-    
+        
     public static function flatten($array, $depth = INF)
     {
         $result = [];
