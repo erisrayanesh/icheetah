@@ -106,19 +106,18 @@ class Arr
         foreach ($array as $key => $item) {
             $item = $item instanceof Collection ? $item->toArray() : $item;
             $newKey = $prefix . (empty($prefix) ? '' : '.') . $key;
-            
             if (is_array($item)) {
-                
+
                 if ($depth === 1) {
-                    $result = array_merge($result, $item);
+                    $result[$newKey] = $item;
                     continue;
                 }
 
-                $result = array_merge($result, static::flattenWithKeys($item, $newKey, $depth - 1));
+                $result = array_merge($result, self::flattenWithKeys($item, $newKey, $depth - 1));
                 continue;
             }
 
-            $result[] = $item;
+            $result[$newKey] = $item;
         }
         return $result;
     }
