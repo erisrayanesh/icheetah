@@ -6,13 +6,31 @@ class Config
 {
     use \ICheetah\Traits\Singleton;
     
+    Const FILE = "file";
+    Const DB = "db";
+    
     /**
      *
      * @var \ICheetah\Tools\Collection
      */
     public $cache;
     
+    /**
+     * Config source
+     * @var string
+     */
+    protected $source = "file";
     
+    /**
+     * Database source mode table name
+     * @var string
+     */
+    protected $tableName = "config";
+
+    /**
+     * File source mode directory name
+     * @var string
+     */
     protected $repository;
 
 
@@ -21,50 +39,74 @@ class Config
         $this->cache = new \ICheetah\Tools\Collection();
     }
         
-    public function item($key, $default = null, $delimiter = null)
+    /**
+     * 
+     * @param string $key
+     * @param mixed $default
+     * @return \ICheetah\Tools\String
+     */
+    public function item($key, $default = null)
     {
-        if (is_null($delimiter)){
-            $delimiter = ".";
-        }
-        
-        $this->load($key);
-        
-        //split and reverse the keys order
-        //example: "application.root" => ["root", "application"]
-        //$keys = array_reverse(explode($delimiter, $key));
-        //look for item at cache with the last key name at keys array
-        //acording to the example it is "application"
-//        $lastKey = array_pop($keys);
-//        $has = $this->cache->hasKey($lastKey);
-        //if $has is null, It means it is a name of new collection which has naver been loaded
-//        if (is_null($has)){
-            
-//        }
-        
-        
-//        while (is_array($has)){
-//            $has = $has->get($key);
-//        }
-        
+        $this->tryCache($key);
+        return string($this->cache->get($key, $default));
     }    
 
-    public static function get($key, $default = null, $delimiter = null)
+    /**
+     * 
+     * @param string $key
+     * @param mixed $default
+     * @return \ICheetah\Tools\String
+     */
+    public static function get($key, $default = null)
     {
         return self::getInstance()->item($key, $default);
     }
     
-    public static function getInt($key, $default = null, $delimiter = null)
+    /**
+     * 
+     * @param string $key
+     * @param mixed $default
+     * @return int
+     */
+    public static function getInt($key, $default = null)
     {
-        
+        return self::getInstance()->item($key, $default)->toInt();
     }
     
-    public static function getFloat($key, $default = null, $delimiter = null)
+    /**
+     * 
+     * @param string $key
+     * @param mixed $default
+     * @return float
+     */
+    public static function getFloat($key, $default = null)
     {
-        
+        return self::getInstance()->item($key, $default)->toFloat();
     }
     
     
-    
+    public function getSource()
+    {
+        return $this->source;
+    }
+
+    public function setSource($source)
+    {
+        $this->source = $source;
+        return $this;
+    }
+        
+    public function getTableName()
+    {
+        return $this->tableName;
+    }
+
+    public function setTableName($tableName)
+    {
+        $this->tableName = $tableName;
+        return $this;
+    }
+
     public function getRepository()
     {
         return $this->repository;
@@ -76,16 +118,30 @@ class Config
         return $this;
     }
     
-        
-    
-    private function load ($key)
+    private function tryCache ($key)
     {
-        $config = include_once $this->getRepository() . "/$key.php";
+        $methodName = "cacheFrom" . ucfirst($this->getSource());
+        if (!method_exists($this, $methodName)) {
+            return;
+        }
+        
+        $config = call_user_func([$this, $methodName], $key);
         if (is_array($config)){
-            $config = \ICheetah\Tools\Arr::flatten($config);
-            $this->cache->set($key, $config);
+            $this->cache->merge($config);
         }
     }
+    
+    private function cacheFromFile($key)
+    {
+        $key = string($key)->left(stripos($key, "."));
+        return include_once $this->getRepository() . "/$key.php";        
+    }
+    
+    private function cacheFromDB($key)
+    {
+        
+    }
+    
     
     
 }

@@ -25,14 +25,14 @@ class String implements \ICheetah\Foundation\IConvertable
      */
     public static function str($string)
     {
-        return new self($string);
+        return new static($string);
     }
 
     /**
      * 
      * @param string $string
      */
-    public function __construct($string)
+    public function __construct($string = "")
     {
         $this->set($string);
     }
@@ -44,10 +44,11 @@ class String implements \ICheetah\Foundation\IConvertable
     
     public function set($string)
     {
-        if (!is_string($string))
+        if (!is_string($string)){
             $this->str = Convert::toString($string);
-        else
+        } else {
             $this->str = $string;
+        }
     }
     
     public function __invoke($str)
