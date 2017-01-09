@@ -6,13 +6,11 @@ use ICheetah\Http\Request;
 
 class Uri
 {
-    
-        
+            
     protected $uri;
     public $parsed;    
     protected $query;
-    
-        
+            
     public function __construct($uri = "")
     {
         $this->parsed = parse_url($uri);

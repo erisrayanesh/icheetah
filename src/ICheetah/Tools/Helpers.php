@@ -44,6 +44,7 @@ if (!function_exists("str_to_camel_case")){
         return str($value)->toCamelCase($wildcard)->toString();
     }
 }
+
 if (!function_exists("str_to_studly_case")){
     function str_to_studly_case($value, $wildcard = '_', $includeWildcard = false)
     {
@@ -100,7 +101,26 @@ if (!function_exists("normalize_class_name")){
     }
 }
 
+if (!function_exists("config")){
+    function config($key, $default)
+    {
+        return \ICheetah\Foundation\Config::get($key, $default);
+    }
+}
 
+if (!function_exists("log")){
+    function log()
+    {
+        return ICheetah\Tools\Log::getInstance();
+    }
+}
+
+if (!function_exists("findder")){
+    function resource()
+    {
+        return ICheetah\Tools\Log::getInstance();
+    }
+}
 
 
 ?>
