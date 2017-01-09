@@ -136,7 +136,7 @@ class Config
         if (stripos($key, ".")){
             $key = mb_substr($key, 0, stripos($key, "."));            
         }
-        return include_once $this->getRepository() . "/$key.php";        
+        return \ICheetah\Tools\Arr::flattenWithKeys(include_once $this->getRepository() . "/$key.php", $key);
     }
     
     private function cacheFromDB($key)

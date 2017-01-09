@@ -118,9 +118,9 @@ class String implements \ICheetah\Foundation\IConvertable
     public function mid ($start, $lenght = null)
     {
         if (function_exists("mb_substr")){
-            return (mb_substr($this->str, $start, $lenght, "utf-8"));
+            return mb_substr($this->str, $start, $lenght, "utf-8");
         } else {
-            return (substr($this->str, $start, $lenght));
+            return substr($this->str, $start, $lenght);
         }
     }
     
