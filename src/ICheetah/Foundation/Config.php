@@ -133,7 +133,9 @@ class Config
     
     private function cacheFromFile($key)
     {
-        $key = string($key)->left(stripos($key, "."));
+        if (stripos($key, ".")){
+            $key = mb_substr($key, 0, stripos($key, "."));            
+        }
         return include_once $this->getRepository() . "/$key.php";        
     }
     
