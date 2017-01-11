@@ -15,18 +15,11 @@ class Application
     
     protected $rootDir = "";
 
-
     /**
      *
      * @var Router
      */
     protected $router;
-
-    protected function __construct()
-    {
-        parent::__construct();
-        $this->router = new Router();        
-    }
     
     /**
      * 
@@ -41,16 +34,15 @@ class Application
     {
         //$this->initSession();        
         
-        $q = Database::table("users");
-        $q instanceof \ICheetah\Database\Query\QueryBuilder;
-//        $q->where(function (\ICheetah\Database\Query\QueryBuilder $query) {
-            $q->where("name", "ab");
-//        });
-        $ret = $q->get();
-        die(print_r($ret, true));
-        
-        
-        //$this->getRouter()->run();        
+//        $q = Database::table("users");
+//        $q instanceof \ICheetah\Database\Query\QueryBuilder;
+////        $q->where(function (\ICheetah\Database\Query\QueryBuilder $query) {
+//            $q->where("name", "ab");
+////        });
+//        $ret = $q->get();
+//        die(print_r($ret, true));
+                
+        return $this->getRouter()->run();        
     }
     
     public function getRootDir()
