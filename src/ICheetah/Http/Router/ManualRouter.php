@@ -1,6 +1,6 @@
 <?php
 
-namespace ICheetah\Http;
+namespace ICheetah\Http\Router;
 
 use \ICheetah\Tools\Uri;
 use \ICheetah\Tools\Arr;

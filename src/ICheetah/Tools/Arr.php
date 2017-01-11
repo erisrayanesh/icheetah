@@ -22,7 +22,7 @@ class Arr
             }
         }        
                 
-        if(is_array($array)){
+        if (is_array($array)){
             $retVal = isset($array[$key]) ? $array[$key] : $default;
         }
         

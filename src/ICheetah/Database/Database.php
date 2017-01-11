@@ -3,13 +3,13 @@
 namespace ICheetah\Database;
 
 use \PDO;
-use \ICheetah\Foundation\Singleton;
 use \ICheetah\Tools\Collection;
 
-class Database extends Singleton
+class Database
 {
 
-    protected static $instance = null;
+    use \ICheetah\Traits\Singleton;
+    
     
     /**
      *
@@ -37,7 +37,6 @@ class Database extends Singleton
         $connection = self::getInstance()->activeConnection();
         return call_user_method_array($name, $connection, $arguments);
     }
-    
         
     /**
      * Database Constructor
@@ -45,6 +44,36 @@ class Database extends Singleton
     protected function __construct()
     {
         $this->lstConnections = new Collection();
+        
+        $default = "database.connections.".config("default", "mysql");
+        
+        if (config($default) == null){
+            //No default connection information available
+            return;
+        }
+        
+        $dbConfig = array (
+            "driver"    => config::DATABASE_DRIVER,
+            "host"    => \Config::DATABASE_SERVER,
+            "database"  => \Config::DATABASE_NAME,
+            "username"  => \Config::DATABASE_USER,
+            "password"  => \Config::DATABASE_PASSWORD,
+            "charset"   => \Config::DATABASE_CHARSET,
+            "collation" => \Config::DATABASE_COLLATION
+        );
+        
+        $connection = null;
+        
+        switch (\Config::DATABASE_DRIVER) {
+            case "mysql":
+                $connection = new Connections\MySqlConnection($dbConfig);
+                break;
+        }
+        
+        $connection->open();
+        
+        Database::getInstance()->addConnection("main", $connection, true);
+        
     }
 
     /**

@@ -1,14 +1,11 @@
 <?php
 
-namespace ICheetah\Http;
+namespace ICheetah\Http\Session;
 
-use ICheetah\Application\Application;
-use ICheetah\Security\Users;
-
-class Session extends \ICheetah\Foundation\Singleton
+class Session
 {
     
-    protected static $instance = null;
+    use \ICheetah\Traits\Singleton;
     
     protected $maxLifeTime = 10;
 
@@ -80,7 +77,7 @@ class Session extends \ICheetah\Foundation\Singleton
         
     }
 
-    public function initSession()
+    public function init()
     {
                                 
         session_set_save_handler(array($this, 'openSession'),
@@ -190,99 +187,7 @@ class Session extends \ICheetah\Foundation\Singleton
         return $this;
     }
 
-    
-        
-    //====== SESSION HANDLER ==========
-    //
-    //====== ISessionHandler =======
-    
-    public function isSessionExists($session_id)
-    {
-        return \Models\Sessions::find($session_id) != null;
-    }
-
-    public function shutdownSession()
-    {
-        @session_write_close();
-    }
-
-    //====== SessionHandlerInterface =======
-    
-    public function closeSession()
-    {
-        // do nothing
-        return true;
-    }
-
-    public function destroySession($session_id)
-    {   
-        $model = \Models\Sessions::find($session_id);
-        if ($model != null) {
-            $model->delete();
-            return true;
-        } else {
-            return false;
-        }
-    }
-
-    public function gcSession($maxlifetime)
-    {
-        $old = time() - $maxlifetime;
-        $model = new \Models\Sessions();
-        $model->where(sprintf("access < %d", $old))->getAll();
-        foreach ($model as $value) {
-            $value->delete();
-        }
-        return true;
-    }
-
-    public function openSession($save_path, $session_id)
-    {
-        // do nothing
-        return true;
-    }
-
-    public function readSession($session_id)
-    {
-        $model = \Models\Sessions::find($session_id);
-        if ($model != null){
-            return $model->data;
-        } else {
-            return "";
-        }
-    }
-
-    public function writeSession($session_id, $session_data)
-    {
-        if ($this->isSessionExists($session_id)){
-            //Update record          
-            $model = \Models\Sessions::find($session_id);
-            if ($model != null){
-                $model->app = Application::getAppName();
-                $model->user_id = Users::getInstance()->activeUserID();
-                $model->access = time();
-                $model->data = $session_data;
-                $model->save();
-                //Debug::out("DB updated \n", true);
-            }            
-        } else {
-            //Create record
-            $model = new \Models\Sessions();
-            $model->session_id = $session_id;
-            $model->user_id = Users::getInstance()->activeUserID();
-            $model->app = Application::getAppName();
-            $model->access = time();
-            $model->data = $session_data;
-            $model->create();            
-            //Debug::out("DB inserted\n", true);
-        }       
-        return true;
-    }
-    
-    public function __destruct()
-    {
-        $this->shutdownSession();
-    }
+     
 }
 
 ?>

@@ -108,10 +108,17 @@ if (!function_exists("config")){
     }
 }
 
-if (!function_exists("log")){
-    function log()
+if (!function_exists("logger")){
+    function logger()
     {
         return ICheetah\Tools\Log::getInstance();
+    }
+}
+
+if (!function_exists("path")){
+    function path($path = "", $allowDots = false, $delimiter = "/")
+    {
+        return new ICheetah\Tools\Path($path, $allowDots, $delimiter);
     }
 }
 

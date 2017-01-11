@@ -48,7 +48,8 @@ class Config
     public function item($key, $default = null)
     {
         $this->tryCache($key);
-        return string($this->cache->get($key, $default));
+        $value = \ICheetah\Tools\Arr::get($this->cache->toArray(), $key, $default);        
+        return string($value);
     }    
 
     /**
@@ -124,11 +125,7 @@ class Config
         if (!method_exists($this, $methodName)) {
             return;
         }
-        
-        $config = call_user_func([$this, $methodName], $key);
-        if (is_array($config)){
-            $this->cache->merge($config);
-        }
+        call_user_func([$this, $methodName], $key);        
     }
     
     private function cacheFromFile($key)
@@ -136,15 +133,17 @@ class Config
         if (stripos($key, ".")){
             $key = mb_substr($key, 0, stripos($key, "."));            
         }
-        return \ICheetah\Tools\Arr::flattenWithKeys(include_once $this->getRepository() . "/$key.php", $key);
+        $filename = $this->getRepository() . "/$key.php";
+        if (file_exists($filename)) {
+            $config = include_once $filename;
+            $this->cache->set($key, $config);
+        }
     }
     
     private function cacheFromDB($key)
     {
         
     }
-    
-    
     
 }
 

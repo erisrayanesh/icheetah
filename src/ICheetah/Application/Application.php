@@ -2,22 +2,16 @@
 
 namespace ICheetah\Application;
 
-use \ICheetah\Foundation\Singleton;
 use \ICheetah\Http\Router;
-use \ICheetah\Http\IRouterEngine;
-use ICheetah\Tools\Collection;
-use ICheetah\Http\Session;
+use ICheetah\Http\Session\Session;
 use \ICheetah\Database\Database;
 use \ICheetah\Database\Connections;
 
 
-class Application extends Singleton
+class Application
 {
     
-    protected static $defaultControllerName = "index";
-    protected $defaultNamespace = "\\Controllers\\";
-    
-    protected static $instance = null;
+    use \ICheetah\Traits\Singleton;
     
     /**
      *
@@ -25,17 +19,9 @@ class Application extends Singleton
      */
     protected $router;
 
-
-    /**
-     *
-     * @var Collection 
-     */
-    protected $globalConfig = null;
-    
     protected function __construct()
     {
         parent::__construct();
-        $this->globalConfig = new Collection();
         $this->router = new Router();        
     }
     
@@ -50,7 +36,6 @@ class Application extends Singleton
     
     public function run()
     {
-        $this->initDatabase();
         //$this->initSession();
         
         
@@ -71,67 +56,17 @@ class Application extends Singleton
         return $this->router;
     }
 
-    public function setRouterEngine(IRouterEngine $engine)
+    public function setRouter(Router\Router $router)
     {
-        $this->getRouter()->setEngine($engine);
-    }
-
-    public function config()
-    {
-        return $this->globalConfig;
-    }
-
-    public function getConfig($name, $default = null)
-    {
-        return $this->config()->get($name, $default);
-    }
-            
-    public function getDefaultNamespace()
-    {
-        return $this->defaultNamespace;
-    }
-
-    public function setDefaultNamespace($defaultNamespace)
-    {
-        $this->defaultNamespace = $defaultNamespace;
-        return $this;
+        $this->router = $router;
     }
     
     protected function initSession()
     {
         $session = Session::getInstance();
-        $session->setMaxLifeTime($this->getConfig("session_expire"));
+        $session->setMaxLifeTime(config("session.maxlifetime", 60));
         $session->setSessionName(md5("arvand"));
-        Session::getInstance()->initSession();
+        $session->init();
     }
-    
-    protected function initDatabase()
-    {
-
-        $dbConfig = array (
-            "driver"    => \Config::DATABASE_DRIVER,
-            "host"    => \Config::DATABASE_SERVER,
-            "database"  => \Config::DATABASE_NAME,
-            "username"  => \Config::DATABASE_USER,
-            "password"  => \Config::DATABASE_PASSWORD,
-            "charset"   => \Config::DATABASE_CHARSET,
-            "collation" => \Config::DATABASE_COLLATION
-        );
-        
-        $connection = null;
-        
-        switch (\Config::DATABASE_DRIVER) {
-            case "mysql":
-                $connection = new Connections\MySqlConnection($dbConfig);
-                break;
-        }
-        
-        $connection->open();
-        
-        Database::getInstance()->addConnection("main", $connection, true);
-    }
-    
     
 }
-
-?>

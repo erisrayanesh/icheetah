@@ -1,14 +1,12 @@
 <?php
 
-namespace ICheetah\Http;
+namespace ICheetah\Http\Router;
 
 use ICheetah\Foundation\Exceptions;
 
 class Router
 {
             
-    protected static $instance = null;
-    
     /**
      *
      * @var IRouterEngine
@@ -58,9 +56,5 @@ class Router
         $this->engine = $engine;
         return $this;
     }
-
-    
-   
     
 }
-?>
