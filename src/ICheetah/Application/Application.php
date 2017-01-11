@@ -13,6 +13,9 @@ class Application
     
     use \ICheetah\Traits\Singleton;
     
+    protected $rootDir = "";
+
+
     /**
      *
      * @var Router
@@ -36,8 +39,7 @@ class Application
     
     public function run()
     {
-        //$this->initSession();
-        
+        //$this->initSession();        
         
         $q = Database::table("users");
         $q instanceof \ICheetah\Database\Query\QueryBuilder;
@@ -51,6 +53,17 @@ class Application
         //$this->getRouter()->run();        
     }
     
+    public function getRootDir()
+    {
+        return $this->rootDir;
+    }
+
+    public function setRootDir($rootDir)
+    {
+        $this->rootDir = $rootDir;
+        return $this;
+    }
+        
     public function getRouter()
     {
         return $this->router;

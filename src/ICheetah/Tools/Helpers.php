@@ -109,6 +109,10 @@ if (!function_exists("config")){
 }
 
 if (!function_exists("logger")){
+    /**
+     * 
+     * @return ICheetah\Tools\Log
+     */
     function logger()
     {
         return ICheetah\Tools\Log::getInstance();
@@ -123,11 +127,22 @@ if (!function_exists("path")){
 }
 
 if (!function_exists("findder")){
+    
     function resource()
     {
         return ICheetah\Tools\Log::getInstance();
     }
 }
 
+if (!function_exists("app")){
+    /**
+     * 
+     * @return \ICheetah\Application\Application
+     */
+    function app()
+    {
+        return \ICheetah\Application\Application::getInstance();
+    }
+}
 
 ?>

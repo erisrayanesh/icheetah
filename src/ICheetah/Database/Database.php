@@ -44,36 +44,8 @@ class Database
     protected function __construct()
     {
         $this->lstConnections = new Collection();
-        
-        $default = "database.connections.".config("default", "mysql");
-        
-        if (config($default) == null){
-            //No default connection information available
-            return;
-        }
-        
-        $dbConfig = array (
-            "driver"    => config::DATABASE_DRIVER,
-            "host"    => \Config::DATABASE_SERVER,
-            "database"  => \Config::DATABASE_NAME,
-            "username"  => \Config::DATABASE_USER,
-            "password"  => \Config::DATABASE_PASSWORD,
-            "charset"   => \Config::DATABASE_CHARSET,
-            "collation" => \Config::DATABASE_COLLATION
-        );
-        
-        $connection = null;
-        
-        switch (\Config::DATABASE_DRIVER) {
-            case "mysql":
-                $connection = new Connections\MySqlConnection($dbConfig);
-                break;
-        }
-        
-        $connection->open();
-        
-        Database::getInstance()->addConnection("main", $connection, true);
-        
+        // load connection
+        $this->loadConnections();        
     }
 
     /**
@@ -161,5 +133,28 @@ class Database
 //            $connection->close();
 //        }
     }
+    
+    private function loadConnections()
+    {
+        $defaultConn = config("database.default", "mysql");
+        $connections = "database.connections";        
+        if (config($connections) == null){
+            //No default connection information available
+            return;
+        }
+        // loop throug connections
+        foreach ($connections as $key => $conn) {
+            $connection = null;
+            switch ($conn["driver"]) {
+                case "mysql":
+                    $connection = new Connections\MySqlConnection($conn);
+                    break;
+            }
+            $connection->open();
+            $this->addConnection($key, $connection, $key == $defaultConn);
+        }
+    }
+    
+    
 }
 ?>
