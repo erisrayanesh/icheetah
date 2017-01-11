@@ -21,14 +21,10 @@ class Application
      */
     protected $router;
     
-    /**
-     * 
-     * @return Application
-     */
-    public static function getInstance()
-    {
-        return parent::getInstance();
-    }
+//    public static function getInstance()
+//    {
+//        return parent::getInstance();
+//    }
     
     public function run()
     {
