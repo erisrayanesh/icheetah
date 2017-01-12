@@ -1,7 +1,7 @@
 <?php
 
 namespace ICheetah\Http\Router;
-
+use ICheetah\Tools\Arr;
 use ICheetah\Foundation\Exceptions;
 
 class Router
