@@ -22,13 +22,17 @@ class Application
      */
     protected $router;
     
+    protected function __construct()
+    {
+        $this->router = new Router\Router();
+    }
+    
     /**
      * 
      * @return Application
      */
     public static function getInstance()
     {
-        $this->router = new Router\Router();
         return static::singletonGetInstance();
     }
     
