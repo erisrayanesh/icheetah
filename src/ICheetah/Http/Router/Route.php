@@ -2,6 +2,7 @@
 
 namespace ICheetah\Http\Router;
 
+use \ICheetah\Http\Request;
 use \ICheetah\Tools\Collection;
 use \ICheetah\Tools\Arr;
 
@@ -45,7 +46,7 @@ class Route
 //        $this->setNamespace($namespace);
     }    
 
-    public function matches(ManualRouter $router, $uri)
+    public function matches(Router $router, $uri)
     {
         
         if (!Arr::has($this->getMethod(), Request::method())){
@@ -146,6 +147,8 @@ class Route
             } else {
                 $this->controller = str_to_studly_case($callback);
             }
+        } else {
+            $this->controller = $this->callback;
         }
         
         return $this;

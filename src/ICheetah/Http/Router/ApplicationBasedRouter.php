@@ -42,7 +42,7 @@ class ApplicationBasedRouter
         
         $response = Response::getInstance();
         //check search engin friendly url status
-        $uri = Uri::getUriSegments();
+        $uri = Uri::getSegments();
         
         $app = Application::getAppName($this->getDefauteApp());
                 

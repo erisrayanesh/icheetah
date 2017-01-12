@@ -61,7 +61,7 @@ class Uri
      * 
      * @return string
      */
-    public static function getUriSegmentsString()
+    public static function getSegmentsString()
     {
         //Get request uri
         $uri = Request::server("REQUEST_URI", "");
@@ -96,9 +96,9 @@ class Uri
      * 
      * @return \ICheetah\Tools\Collection
      */
-    public static function getUriSegments()
+    public static function getSegments()
     {
-        $uri = self::getUriSegmentsString();        
+        $uri = self::getSegmentsString();        
         if (!empty($uri)){
             //split uri to array
             $uri = explode("/", $uri);            
