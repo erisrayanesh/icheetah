@@ -18,6 +18,14 @@ class Router
     protected $groups = array();
     
     protected $currentRoute = null;
+    
+    /**
+     * List of request found arguments
+     * @var array
+     */
+    protected $parameters = array();
+    
+    protected $controllersNamespace = "\\Controllers\\";
 
     public function __construct()
     {
@@ -33,8 +41,7 @@ class Router
     {
         if (is_null($this->getEngine())){
             throw new Exceptions\NoRouterEngine();
-        }
-        
+        }        
         call_user_method("route", $this->getEngine());        
     }
     
@@ -57,8 +64,11 @@ class Router
         if (is_string($groupParams)){
             $groupParams = array("prefix" => $groupParams);
         }
+        // push current group to stack
         array_push($this->groups, $groupParams);
+        // run the callback
         call_user_func($callback, $this);
+        // pop current group from stack
         array_pop($this->groups);
     }
     
@@ -119,6 +129,8 @@ class Router
         $this->runController($controller, $action, $this->getParameters());
     }
     
+    // Private methods
+    
     /**
      * Return Controller instance and possible action name
      * @return array
@@ -142,6 +154,32 @@ class Router
             }
         }
         return array($controller, $action);
+    }
+    
+    protected function runController($controller, $action = null, $params = array())
+    {
+        if ($controller instanceof \Closure){
+            return call_user_func_array($controller, $params);
+        }
+        
+        //Check if controller is routable.
+        if ($controller instanceof \ICheetah\MVC\RoutableController){
+            //Call run method of controll to proceed the routing
+            return $controller->run();
+        } else {
+            //The controller is simple controller.
+            //If action is available then it will be called. 
+            //Otherwise controller __invoke would be called.
+            
+            
+            if (!is_null($action)){
+                return call_user_method_array($action, $controller, $params);                
+            } else {
+                //Call __invoke
+                return $controller($params);
+            }            
+        }        
+        
     }
 
     protected function getGroupsPrefixes($merge = true)
@@ -196,7 +234,6 @@ class Router
         }
         return $defaults;
     }
-    
     
     protected function addIndexRoute($pattern, $controllerName, $options = array())
     {
@@ -290,4 +327,26 @@ class Router
         return $this;
     }
     
+    public function getParameters()
+    {
+        return $this->parameters;
+    }
+
+    public function setParameters($arguments)
+    {
+        $this->parameters = $arguments;
+        return $this;
+    }
+    
+    public function getControllersNamespace()
+    {
+        return $this->controllersNamespace;
+    }
+
+    public function setControllersNamespace($controllersNamespace)
+    {
+        $this->controllersNamespace = $controllersNamespace;
+        return $this;
+    }
+
 }

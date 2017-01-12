@@ -28,6 +28,7 @@ class Application
      */
     public static function getInstance()
     {
+        $this->router = new Router\Router();
         return static::singletonGetInstance();
     }
     
@@ -57,14 +58,13 @@ class Application
         return $this;
     }
         
+    /**
+     * 
+     * @return Router\Router
+     */
     public function getRouter()
     {
         return $this->router;
-    }
-
-    public function setRouter(Router\Router $router)
-    {
-        $this->router = $router;
     }
     
     protected function initSession()

@@ -8,7 +8,7 @@ use ICheetah\Http\Inputs;
 use ICheetah\Tools\Uri;
 use ICheetah\UI\Template;
 
-class ApplicationBasedRouter extends RouterEngine implements IRouterEngine
+class ApplicationBasedRouter
 {
     
     protected $defauteApp = "Site";
