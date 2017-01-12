@@ -7,11 +7,12 @@ use ICheetah\Http\Session\Session;
 use \ICheetah\Database\Database;
 use \ICheetah\Database\Connections;
 
-
 class Application
 {
     
-    use \ICheetah\Traits\Singleton;
+    use \ICheetah\Traits\Singleton {
+        getInstance as singletonGetInstance;
+    }
     
     protected $rootDir = "";
 
@@ -21,10 +22,14 @@ class Application
      */
     protected $router;
     
-//    public static function getInstance()
-//    {
-//        return parent::getInstance();
-//    }
+    /**
+     * 
+     * @return Application
+     */
+    public static function getInstance()
+    {
+        return $this->singletonGetInstance();
+    }
     
     public function run()
     {
