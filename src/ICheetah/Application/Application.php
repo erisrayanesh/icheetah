@@ -28,7 +28,7 @@ class Application
      */
     public static function getInstance()
     {
-        return $this->singletonGetInstance();
+        return static::singletonGetInstance();
     }
     
     public function run()
