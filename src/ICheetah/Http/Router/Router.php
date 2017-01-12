@@ -2,6 +2,7 @@
 
 namespace ICheetah\Http\Router;
 use ICheetah\Tools\Arr;
+use \ICheetah\Tools\Uri;
 use ICheetah\Foundation\Exceptions;
 
 class Router
@@ -31,20 +32,6 @@ class Router
     {
         
     }
-
-    /**
-     * Executes added route patterns of uri and runs assigned callback
-     * @return Response
-     * @throws Exceptions\NoRouterEngine
-     */
-    public function run()
-    {
-        if (is_null($this->getEngine())){
-            throw new Exceptions\NoRouterEngine();
-        }        
-        call_user_method("route", $this->getEngine());        
-    }
-    
     
     public function firstMatch($pattern, $route = null)
     {
@@ -111,34 +98,51 @@ class Router
                
     }
 
-    public function route()
+    /**
+     * Executes added route patterns of uri and runs assigned callback
+     * @return Response
+     * @throws Exceptions\NoRouterEngine
+     */
+    public function run()
     {
         //Find route that match current request
-        $route = $this->findRoute();
-        
-        $this->setCurrentRoute($route);
-        
-        //if no route found
-        if (is_null($route)){
-            return;
+        $key = $this->findRoute();
+        //If no route found return 404 response
+        if (is_null($key)){
+            return "404";
         }
-        
-        die (print_r($this->routes, true));
-        
-        list($controller, $action) = $this->initController();
-        $this->runController($controller, $action, $this->getParameters());
-    }
+        //Get route of found key
+        $route = $this->routes[$key];
+        //Set found route as current proccing route
+        $this->setCurrentRoute($route);
+        //find route bussines logic
+        list($controller, $action) = $this->initController($route);
+        return $this->runController($controller, $action, $this->getParameters());            
+    }    
     
     // Private methods
+    
+    /**
+     * 
+     * @return Route
+     */
+    protected function findRoute()
+    {
+        $uri = Uri::getSegmentsString();
+        foreach ($this->routes as $key => $route) {
+            if ($route->matches($this, $uri)){
+                return $key;
+            }
+        }
+        return null;
+    }
     
     /**
      * Return Controller instance and possible action name
      * @return array
      */
-    protected function initController()
+    protected function initController(Route $route)
     {
-        $route = $this->getCurrentRoute();
-        
         //Check if route callback is a closure. If true it has to be executed and break
         $controller = $action = null;
         
@@ -170,8 +174,6 @@ class Router
             //The controller is simple controller.
             //If action is available then it will be called. 
             //Otherwise controller __invoke would be called.
-            
-            
             if (!is_null($action)){
                 return call_user_method_array($action, $controller, $params);                
             } else {
@@ -215,12 +217,23 @@ class Router
     {
         $pattern = $this->getGroupsPrefixes() . "/" . $pattern;
         $this->formatRegular($pattern);
-        $callback = $this->getControllersNamespace() . trim($this->getGroupsNamespaces(), "\\") . "\\" . $callback;
-        $this->routes[] = $this->initRoute($method, $pattern, $callback);
+        if (is_string($callback)){
+            $callback = $this->getControllersNamespace() . trim($this->getGroupsNamespaces(), "\\") . "\\" . $callback;            
+        }
+        $this->routes[] = $this->createRoute($method, $pattern, $callback);        
         return end($this->routes);
-    }    
+    }
     
-    protected function initRoute(array $method, $pattern, $callback)
+    /**
+     * Formats the pattern string to a valid regular expression
+     * @param string $pattern
+     */
+    protected function formatRegular(&$pattern)
+    {
+        $pattern = addcslashes(trim($pattern, "\\\/"), "\\\/");
+    }
+    
+    protected function createRoute(array $method, $pattern, $callback)
     {
         return new Route($method,$pattern, $callback);
     }
@@ -285,31 +298,6 @@ class Router
         return $retVal;
     }
 
-    /**
-     * 
-     * @return Route
-     */
-    protected function findRoute()
-    {
-        $uri = Uri::getUriSegmentsString();
-        foreach ($this->routes as $route) {
-            if ($route->matches($this, $uri)){
-                return $route;
-            }
-        }
-        return null;
-    }
-    
-    /**
-     * Formats the pattern string to a valid regular expression
-     * @param string $pattern
-     */
-    protected function formatRegular(&$pattern)
-    {
-        $pattern = addcslashes(trim($pattern, "\\\/"), "\\\/");
-    }
-    
-    
     // Properties
     
     /**

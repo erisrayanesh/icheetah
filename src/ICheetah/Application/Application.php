@@ -22,9 +22,6 @@ class Application
      */
     protected $router;
     
-    /**
-     * This is my change
-     */
     protected function __construct()
     {
         $this->router = new Router\Router();
