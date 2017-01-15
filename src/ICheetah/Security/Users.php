@@ -5,9 +5,13 @@ namespace ICheetah\Security;
 use ICheetah\Http\Inputs;
 use ICheetah\Tools\Convert;
 
-class Users extends \ICheetah\Foundation\Singleton
+class Users
 {
-    protected static $instance = null;
+    
+    
+    use \ICheetah\Foundation\Singleton {
+         getInstance as singletonGetInstance;
+    }
     
     /**
      * 
@@ -15,7 +19,7 @@ class Users extends \ICheetah\Foundation\Singleton
      */
     public static function getInstance()
     {
-        return parent::getInstance();
+        return parent::singletonGetInstance();
     }
     
     public static function login($username, $password)
@@ -67,8 +71,7 @@ class Users extends \ICheetah\Foundation\Singleton
     public static function getActiveUser()
     {
         return self::getUser(self::activeUserID());
-    }
-    
+    }    
     
     /**
      * 

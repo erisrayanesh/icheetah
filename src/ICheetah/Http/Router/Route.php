@@ -60,7 +60,7 @@ class Route
         if ($this->isClosure() || $this->hasAction()){
             $pattern = "^$pattern$";
         }
-        
+
         $matches = array();
         if (preg_match("/$pattern/i", $uri, $matches)){
             //Extract the matched string from matches array
@@ -98,7 +98,11 @@ class Route
 //            $retVal = $this->getNamespace() . "\\" . $retVal;
 //        }
 //        return $retVal;
-        return $this->controller;
+        if (is_string($this->getCallback())) {
+            return $this->controller;            
+        } else {
+            return $this->callback;
+        }
     }
     
     public function getAction()
@@ -147,8 +151,6 @@ class Route
             } else {
                 $this->controller = str_to_studly_case($callback);
             }
-        } else {
-            $this->controller = $this->callback;
         }
         
         return $this;

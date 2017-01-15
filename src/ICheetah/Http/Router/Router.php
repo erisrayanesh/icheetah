@@ -109,7 +109,7 @@ class Router
         $key = $this->findRoute();
         //If no route found return 404 response
         if (is_null($key)){
-            return "404";
+            throw new RouteNotFoundException();
         }
         //Get route of found key
         $route = $this->routes[$key];
@@ -145,7 +145,6 @@ class Router
     {
         //Check if route callback is a closure. If true it has to be executed and break
         $controller = $action = null;
-        
         if ($route->isClosure()){
             $controller = $route->getController();
         } else {

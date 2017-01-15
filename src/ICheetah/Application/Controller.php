@@ -1,6 +1,6 @@
 <?php
 
-namespace ICheetah\MVC;
+namespace ICheetah\Application;
 
 use ICheetah\Tools\Convert;
 

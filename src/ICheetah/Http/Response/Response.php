@@ -1,10 +1,10 @@
 <?php
 
-namespace ICheetah\Http;
+namespace ICheetah\Http\Response;
 
 use ICheetah\Tools\Collection;
 
-class Response extends \ICheetah\Foundation\Singleton
+abstract class Response
 {
     
     //Symphony Response class
@@ -102,8 +102,6 @@ class Response extends \ICheetah\Foundation\Singleton
      */
     protected $charset;
     
-    protected static $instance = null;
-    
     /**
      * Status codes translation table.
      *
@@ -179,21 +177,11 @@ class Response extends \ICheetah\Foundation\Singleton
         511 => 'Network Authentication Required',                             // RFC6585
     );
 
-    protected function __construct()
+    public function __construct()
     {
-        parent::__construct();
         $this->headers = new Collection();
         $this->setStatusCode(200);
         $this->setVersion('1.0');
-    }
-
-    /**
-     * 
-     * @return Response
-     */
-    public static function getInstance()
-    {
-        return parent::getInstance();
     }
     
     public function isInvalid()
@@ -275,8 +263,7 @@ class Response extends \ICheetah\Foundation\Singleton
     public function send()
     {
         $this->sendHeaders();
-        $this->sendContent();
-        
+        $this->sendContent();        
     }
 
     public function __toString()
@@ -349,8 +336,5 @@ class Response extends \ICheetah\Foundation\Singleton
         $this->charset = $charset;
         return $this;
     }
-
        
 }
-
-?>

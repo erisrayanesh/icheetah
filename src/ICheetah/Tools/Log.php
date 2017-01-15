@@ -14,11 +14,10 @@ class Log
 
     protected function __construct()
     {
-        $this->logger = new Monolog\Logger('icheetah_logger');
+        $this->logger = new \Monolog\Logger('ICheetahLog');
         $this->logger->setTimezone(new \DateTimeZone(config("application.timezone", "asia/tehran")));
-        $this->logger->pushHandler(new Monolog\Handler\StreamHandler(config("application.log"), Monolog\Logger::DEBUG));
-    }
-       
+        $this->logger->pushHandler(new \Monolog\Handler\StreamHandler(config("application.log"), \Monolog\Logger::DEBUG));
+    }       
     
     public function alert($message, array $context = array())
     {

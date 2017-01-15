@@ -48,8 +48,7 @@ class Config
     public function item($key, $default = null)
     {
         $this->tryCache($key);
-        $value = \ICheetah\Tools\Arr::get($this->cache->toArray(), $key, $default);        
-        return string($value);
+        return \ICheetah\Tools\Arr::get($this->cache->toArray(), $key, $default);        
     }    
 
     /**
@@ -131,8 +130,13 @@ class Config
     private function cacheFromFile($key)
     {
         if (stripos($key, ".")){
-            $key = mb_substr($key, 0, stripos($key, "."));            
+            $key = mb_substr($key, 0, stripos($key, "."));
         }
+        
+        if ($this->cache->hasKey($key)){
+            return;
+        }
+        
         $filename = $this->getRepository() . "/$key.php";
         if (file_exists($filename)) {
             $config = include_once $filename;

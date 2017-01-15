@@ -4,77 +4,35 @@ namespace ICheetah\Tools;
 
 class Path
 {
-    
-    protected $path;
-    
-    protected $allowDots;
-    
-    protected $delimiter = "/";
-    
-    public function __construct($path = "", $allowDots = false, $delimiter = "/")
-    {   
-        $this->delimiter = $delimiter;
-        $this->allowDots = $allowDots;
-        $this->path = $this->toArray($this->clean($path));        
-    }
-    
-    public function combine($path)
+    public static function clean($path, $allowDots = true)
     {
-        $this->path[] = $this->toArray($this->clean($path));
-    }
-    
-    public function __toString()
-    {
-        return $this->toString();
-    }
-    
-    public function toString()
-    {
-        return implode($this->getDelimiter(), $this->path);
-    }
-    
-    public function getDelimiter()
-    {
-        return $this->delimiter;
-    }
-
-    public function setDelimiter($delimiter)
-    {
-        $this->delimiter = $delimiter;
-        return $this;
-    }
-
-    public function getAllowDots()
-    {
-        return $this->allowDots;
-    }
-
-    public function setAllowDots($allowDots)
-    {
-        $this->allowDots = $allowDots;
-        return $this;
-    }
-
-    
-    protected function clean($path)
-    {
-        if (!$this->getAllowDots()) {
+        if (!$allowDots) {
             //remove sequential dot
             $path = preg_replace("/\.+/", "", $path);
         }
         
         //remove backslash
-        $path = preg_replace("/\\+/", "", $path);
+        $path = preg_replace("/\\+/", "\\", $path);
         
         //remove sequential slash
-        $path = preg_replace("/\/+/", "", $path);
+        $path = preg_replace("/\/+/", "/", $path);
         
         return $path;
     }
     
-    protected function toArray($path)
+    public static function split($path, $delimiter = "/")
     {
-        return explode("/", $path);
+        return explode($delimiter, $path);
+    }
+    
+    public static function join($pieces, $delimiter = "/")
+    {
+        return join($delimiter, $pieces);
+    }
+    
+    public static function switchSeparator($path, $from, $to)
+    {
+        return self::join(self::split($path, $from) , $to);
     }
     
 }

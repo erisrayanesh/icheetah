@@ -3,9 +3,8 @@
 namespace ICheetah\Application;
 
 use \ICheetah\Http\Router;
+use \ICheetah\View;
 use ICheetah\Http\Session\Session;
-use \ICheetah\Database\Database;
-use \ICheetah\Database\Connections;
 
 class Application
 {
@@ -47,8 +46,21 @@ class Application
 ////        });
 //        $ret = $q->get();
 //        die(print_r($ret, true));
-                
-        return $this->getRouter()->run();        
+        
+        $response = null;
+        
+        try {
+            $response = $this->getRouter()->run();
+        } catch (Router\RouteNotFoundException $exc) {
+        } catch (View\ViewNotFoundException $exc) {
+            $response = "404";
+        }
+        
+        if ($response instanceof \ICheetah\Http\Response\Response){
+            return $response->send();            
+        } else {
+            echo $response;
+        }
     }
     
     public function getRootDir()

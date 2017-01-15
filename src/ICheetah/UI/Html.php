@@ -114,9 +114,5 @@ class Html
         $element->mergeAttributes($attributes);
         return $element;
     }
-
-    
-    
     
 }
-?>

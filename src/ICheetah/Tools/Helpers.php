@@ -7,13 +7,6 @@ if (!function_exists("collect")){
     }
 }
 
-if (!function_exists("view")){
-    function view($strName, \stdClass $models = null)
-    {
-        return ICheetah\MVC\View::import($strName, $models);       
-    }
-}
-
 if (!function_exists("string")){
     /**
      * Returns a string object
@@ -102,7 +95,7 @@ if (!function_exists("normalize_class_name")){
 }
 
 if (!function_exists("config")){
-    function config($key, $default)
+    function config($key, $default = null)
     {
         return \ICheetah\Foundation\Config::get($key, $default);
     }
@@ -119,18 +112,14 @@ if (!function_exists("logger")){
     }
 }
 
-if (!function_exists("path")){
-    function path($path = "", $allowDots = false, $delimiter = "/")
+if (!function_exists("absPath")){
+    /**
+     * 
+     * @return ICheetah\Tools\Log
+     */
+    function absPath($relativePath = "")
     {
-        return new ICheetah\Tools\Path($path, $allowDots, $delimiter);
-    }
-}
-
-if (!function_exists("findder")){
-    
-    function resource()
-    {
-        return ICheetah\Tools\Log::getInstance();
+        return ICheetah\Tools\Findder::getAbsPath($relativePath);
     }
 }
 
@@ -142,6 +131,13 @@ if (!function_exists("app")){
     function app()
     {
         return \ICheetah\Application\Application::getInstance();
+    }
+}
+
+if (!function_exists("view")){
+    function view($strName, array $data = [])
+    {
+        return new ICheetah\View\View($strName, $data);       
     }
 }
 
