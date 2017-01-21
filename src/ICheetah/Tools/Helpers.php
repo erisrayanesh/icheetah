@@ -106,9 +106,13 @@ if (!function_exists("logger")){
      * 
      * @return ICheetah\Tools\Log
      */
-    function logger()
+    function logger($message, array $context = array())
     {
-        return ICheetah\Tools\Log::getInstance();
+        $instance = ICheetah\Tools\Log::getInstance();
+        if (!empty($message)){
+            $instance->debug($message, $context);
+        }
+        return $instance;
     }
 }
 
@@ -134,7 +138,24 @@ if (!function_exists("app")){
     }
 }
 
+if (!function_exists("cache")){
+    /**
+     * 
+     * @return ICheetah\Cache\CanineCache
+     */
+    function cache()
+    {
+        return \ICheetah\Cache\CanineCache::getInstance();
+    }
+}
+
 if (!function_exists("view")){
+    /**
+     * 
+     * @param string $strName view name
+     * @param array $data
+     * @return \ICheetah\View\View
+     */
     function view($strName, array $data = [])
     {
         return new ICheetah\View\View($strName, $data);       

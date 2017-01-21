@@ -1,5 +1,5 @@
 <?php
 
-namespace ICheetah\View;
+namespace ICheetah\View\Exceptions;
 
 class ViewNotFoundException extends \RuntimeException {}

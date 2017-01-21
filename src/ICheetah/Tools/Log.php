@@ -53,8 +53,7 @@ class Log
     {
         $this->log(__FUNCTION__, $message, $context);
     }
-    
-    
+        
     protected function log($level, $message, array $context = array())
     {
         if (is_array($message)){
@@ -66,6 +65,8 @@ class Log
         }
         
         $this->logger->$level($message, $context);
+        
+        return $this;
     }
     
 }

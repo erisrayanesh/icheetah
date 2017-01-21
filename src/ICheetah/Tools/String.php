@@ -92,21 +92,17 @@ class String implements \ICheetah\Foundation\IConvertable
 
     /**
      * 
-     * @param string $strText
+     * @param string $needle
      * @return boolean
      */
-    public function beginsWith ($strText)
+    public function beginsWith ($needle)
     {
-        // search backwards starting from haystack length characters from the end
-        return $strText === "" || strrpos($this->str, $strText, -strlen($this->str)) !== false;
-        //return (substr($this->str, 0, strlen($strText)) == $strText);
+        return $needle != "" && mb_strpos($this->str, $needle) === 0;
     }
 
-    public function endsWith ($strText)
+    public function endsWith ($needle)
     {
-        // search forward starting from end minus needle length characters
-        return $strText === "" || (($temp = strlen($this->str) - strlen($strText)) >= 0 && strpos($this->str, $strText, $temp) !== false);
-        //return (substr($this->str, 0, strlen($strText)) == $strText);
+        return $needle === $this->mid($this->str, -$this->length($needle));
     }
 
     /**
@@ -117,11 +113,7 @@ class String implements \ICheetah\Foundation\IConvertable
      */
     public function mid ($start, $lenght = null)
     {
-        if (function_exists("mb_substr")){
-            return mb_substr($this->str, $start, $lenght, "utf-8");
-        } else {
-            return substr($this->str, $start, $lenght);
-        }
+        return mb_substr($this->str, $start, $lenght, "utf-8");
     }
     
     public function left ($lenght = null)
@@ -152,6 +144,7 @@ class String implements \ICheetah\Foundation\IConvertable
             default:
                 $this->set(trim($this->str, $char));
         }
+        return $this;
     }
 
     /**
@@ -225,7 +218,8 @@ class String implements \ICheetah\Foundation\IConvertable
      */
     public function toUpper()
     {
-        $this->str = strtoupper($this->str);
+        $this->set(strtoupper($this->str));
+        return $this;
     }
 
     /**
@@ -234,7 +228,8 @@ class String implements \ICheetah\Foundation\IConvertable
      */
     public function toLower()
     {
-        $this->str = strtolower($this->str);
+        $this->set(strtolower($this->str));
+        return $this;
     }
 
     /**
@@ -257,9 +252,14 @@ class String implements \ICheetah\Foundation\IConvertable
      * 
      * @return string
      */
-    public function md5 ()
+    public function md5 ($return = false)
     {
-        $this->str = md5($this->str);
+        if ($return){
+            return md5($this->str);
+        } else {
+            $this->set(md5($this->str));
+            return $this;
+        }
     }
     
     /**
@@ -277,7 +277,8 @@ class String implements \ICheetah\Foundation\IConvertable
      */
     public function reverse ()
     {
-        $this->str = strrev($this->str);
+        $this->set(strrev($this->str));
+        return $this;
     }
 
     /**
@@ -305,9 +306,9 @@ class String implements \ICheetah\Foundation\IConvertable
     public function findFirstPos ($str, $sensetive = self::CASE_INSENSETIVE)
     {
         if ($sensetive === self::CASE_INSENSETIVE) {
-            return strpos($this->str, $str);
+            return mb_strpos($this->str, $str);
         } elseif ($sensetive === self::CASE_SENSETIVE) {
-            return stripos($this->str, $str);
+            return mb_stripos($this->str, $str);
         }
     }
 
@@ -328,7 +329,7 @@ class String implements \ICheetah\Foundation\IConvertable
     
     public function has($str, $sensetive = self::CASE_INSENSETIVE)
     {
-        return $this->findFirstPos($str, $sensetive);
+        return $this->findFirstPos($str, $sensetive) !== false;
     }
 
     public function insert($insertion, $pos)

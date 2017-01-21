@@ -52,6 +52,7 @@ class Application
         try {
             $response = $this->getRouter()->run();
         } catch (Router\RouteNotFoundException $exc) {
+            $response = "500";
         } catch (View\ViewNotFoundException $exc) {
             $response = "404";
         }

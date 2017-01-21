@@ -15,6 +15,8 @@ class View
      */
     private $data;
     
+    private $sections = array();
+    
     public function __construct($strName, $data = array())
     {
         if (!is_array($data)){
@@ -69,6 +71,23 @@ class View
         $this->strName = $strName;
         return $this;
     }
+    
+    public function put($section, $content)
+    {
+        $this->sections[$section] = $content;
+        return $this;
+    }
+    
+    public function append($section, $content)
+    {
+        if (array_key_exists($section, $this->sections)){
+            $this->sections[$section] = $this->sections[$section] . $content;
+        } else {
+            $this->put($section, $content);
+        }
+        return $this;
+    }
+    
     
 }
 
