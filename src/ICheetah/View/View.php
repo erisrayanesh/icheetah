@@ -2,7 +2,6 @@
 
 namespace ICheetah\View;
 
-use \ICheetah\Tools\Collection;
 
 class View
 {
@@ -15,33 +14,34 @@ class View
      */
     private $data;
     
-    private $sections = array();
-    
-    public function __construct($strName, $data = array())
+    public function __construct($strName, array $data = [])
     {
-        if (!is_array($data)){
-            $data = (array) $data;
-        }
-        $this->data = $data;
         $this->data = $data;
         $this->setName($strName);
     }
     
+    /**
+     * Renders the view
+     * @return \ICheetah\Http\Response\HtmlResponse
+     */
     public function render()
     {
         $engin = new BlackSpots();
-        $content = $engin->render($this);
-        return $content;
+        $contents = $engin->render($this);
+        return new \ICheetah\Http\Response\HtmlResponse($contents);
     }
     
     public function __get($name)
     {
-        return $this->getData()->get($name);
+        if (isset($this->data[$name])){
+            return $this->data[$name];
+        }
+        return null;
     }
     
     public function __set($name, $value)
     {
-        $this->getData()->set($name, $value);
+        return $this->data[$name] = $value ;
     }
     
     public function getData()
@@ -71,24 +71,7 @@ class View
         $this->strName = $strName;
         return $this;
     }
-    
-    public function put($section, $content)
-    {
-        $this->sections[$section] = $content;
-        return $this;
-    }
-    
-    public function append($section, $content)
-    {
-        if (array_key_exists($section, $this->sections)){
-            $this->sections[$section] = $this->sections[$section] . $content;
-        } else {
-            $this->put($section, $content);
-        }
-        return $this;
-    }
-    
-    
+        
 }
 
 ?>

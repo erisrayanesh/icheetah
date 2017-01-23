@@ -11,13 +11,13 @@ class JsonResponse extends Response
         
     }
     
-    public function setContent($content)
+    public function setContents($content)
     {
         if ($this->isSerializable($content)){
             $content = json_encode($content);
         }
         
-        parent::setContent($content);
+        parent::setContents($content);
     }
     
     protected function isSerializable($content)

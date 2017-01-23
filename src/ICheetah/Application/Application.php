@@ -3,7 +3,8 @@
 namespace ICheetah\Application;
 
 use \ICheetah\Http\Router;
-use \ICheetah\View;
+use ICheetah\View\View;
+use ICheetah\Http\Response;
 use ICheetah\Http\Session\Session;
 
 class Application
@@ -47,21 +48,26 @@ class Application
 //        $ret = $q->get();
 //        die(print_r($ret, true));
         
-        $response = null;
-        
         try {
             $response = $this->getRouter()->run();
-        } catch (Router\RouteNotFoundException $exc) {
-            $response = "500";
-        } catch (View\ViewNotFoundException $exc) {
-            $response = "404";
-        }
+            
+            if ($response instanceof View){
+                $response = $response->render();
+            }
+            
+            if ($response instanceof Response\Response){
+                $response->send();     
+            } else {
+                echo $response;
+            }
+            
+        } catch (\Exception $exc) {
+            
+        }        
         
-        if ($response instanceof \ICheetah\Http\Response\Response){
-            return $response->send();            
-        } else {
-            echo $response;
-        }
+        $time_end = microtime(true);
+        $execution_time = $time_end - ICHEETAH_START;        
+        logger($execution_time);
     }
     
     public function getRootDir()

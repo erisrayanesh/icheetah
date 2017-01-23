@@ -177,11 +177,13 @@ abstract class Response
         511 => 'Network Authentication Required',                             // RFC6585
     );
 
-    public function __construct()
+    public function __construct($content = "", $status = 200, array $headers = [])
     {
         $this->headers = new Collection();
-        $this->setStatusCode(200);
+        $this->setHeader($headers);
+        $this->setStatusCode($status);
         $this->setVersion('1.0');
+        $this->setContents($content);
     }
     
     public function isInvalid()
@@ -252,18 +254,18 @@ abstract class Response
         header(sprintf('HTTP/%s %s %s', $this->getVersion(), $this->getStatusCode(), $this->getStatusText()), true, $this->getStatusCode());        
     }
     
-    public function sendContent()
+    public function sendContents()
     {
         //remove any sent content
         @ob_end_clean();
-        echo $this->getContent();
+        echo $this->getContents();
         return $this;
     }
 
     public function send()
     {
         $this->sendHeaders();
-        $this->sendContent();        
+        $this->sendContents();        
     }
 
     public function __toString()
@@ -282,6 +284,14 @@ abstract class Response
     public function getHeaders()
     {
         return $this->headers;
+    }
+    
+    public function setHeader(array $item)
+    {
+        foreach ($item as $key => $value) {
+            $this->getHeaders()->set($key, $value);
+        }
+        return $this;
     }
 
     public function getVersion()
@@ -315,12 +325,12 @@ abstract class Response
         }
     }
     
-    public function getContent()
+    public function getContents()
     {
         return $this->content;
     }
 
-    public function setContent($content)
+    public function setContents($content)
     {
         $this->content = $content;
         return $this;
